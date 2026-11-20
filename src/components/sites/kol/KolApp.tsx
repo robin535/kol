@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Quiz, { type QuizResult } from "./Quiz";
+import type { QuizResult } from "./Quiz";
+import QuizDialog from "./QuizDialog";
 import {
   BRAND,
   LANGS,
-  QUIZ_BY_LANG,
   IDEAL_CHOICES,
   normalizeProfiles,
   pickText,
@@ -45,7 +45,7 @@ export default function KolApp({ heroes }: Props) {
   const [lang, setLang] = useState<Lang>("en");
   const [langOpen, setLangOpen] = useState(false);
   const [country, setCountry] = useCountry();
-  const [screen, setScreen] = useState<Screen>("about");
+  const [, setScreen] = useState<Screen>("about");
   const [editOpen, setEditOpen] = useState(false);
   const [result, setResult] = useState<QuizResult | null>(null);
 
@@ -189,8 +189,6 @@ export default function KolApp({ heroes }: Props) {
   const rotate = dragging ? drag.x / 18 : 0;
 
   const heroSrc = result?.gender === "man" ? heroes.man : heroes.woman;
-  const copy = QUIZ_BY_LANG[lang];
-  const canDiscover = Boolean(result);
   const amount = marketAmount(country);
 
   const openJourney = (stage: JourneyStage, profile: Profile | null = info) => {
@@ -293,33 +291,7 @@ export default function KolApp({ heroes }: Props) {
           </header>
 
           <div className="app-content">
-            {screen === "about" || !result ? (
-              <div className="onboarding">
-                <div className="step-body">
-                  <Quiz lang={lang} onComplete={onQuizComplete} initial={result ?? undefined} />
-                  {!result && (
-                    <>
-                      <p className="step-subtitle" style={{ marginTop: 18 }}>
-                        {copy.subtitles[0]}
-                      </p>
-                      <div className="quick-continue">
-                        <button
-                          className="primary"
-                          disabled={!canDiscover}
-                          onClick={() =>
-                            result
-                              ? setScreen("discover")
-                              : showToast(QUIZ_BY_LANG[lang].working)
-                          }
-                        >
-                          {copy.next}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            ) : tab === "discover" ? (
+            {tab === "discover" ? (
               <div className="discover">
                 <div className="discover-top">
                   <div className="discover-tabs">
@@ -596,29 +568,16 @@ export default function KolApp({ heroes }: Props) {
         </section>
       </main>
 
-      {editOpen && (
-        <div
-          className="kol-modal"
-          onClick={() => setEditOpen(false)}
-          role="presentation"
-        >
-          <div
-            className="kol-modal-card quiz-shell"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="quiz-header">
-              <span className="wordmark" style={{ fontSize: 35 }}>
-                kol<span>♡</span>
-              </span>
-              <button className="text-button" onClick={() => setEditOpen(false)}>
-                {lang === "zh" ? "关闭" : "Close"}
-              </button>
-            </div>
-            <Quiz lang={lang} onComplete={onQuizComplete} initial={result ?? undefined} />
-          </div>
-        </div>
+      {(editOpen || !result) && (
+        <QuizDialog
+          lang={lang}
+          initial={result ?? undefined}
+          onDismiss={() => setEditOpen(false)}
+          onComplete={(next) => {
+            setEditOpen(false);
+            onQuizComplete(next);
+          }}
+        />
       )}
 
       {info && (

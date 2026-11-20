@@ -781,7 +781,7 @@ const hi: Partial<JourneyCopy> = {
   shareEnded: "रिमाइंडर समाप्त हो गया। आप अब भी दोस्त को बुलाकर इनाम पा सकते हैं।",
 };
 
-const SOURCE: Record<Lang, Partial<JourneyCopy>> = { zh, en, hi };
+const SOURCE: Record<Lang, Partial<JourneyCopy>> = { zh, en, hi, es: {} };
 
 export function copyFor(lang: Lang): JourneyCopy {
   return { ...en, ...SOURCE[lang] };

@@ -842,3 +842,28 @@ body {
   box-shadow: 0 0 35px #fb91a665;
 }
 .phone-app { border-color: #efcecd40; box-shadow: 0 30px 100px #09020970; }
+
+/* ---- Source questionnaire modal (native <dialog> over the editorial page) ---- */
+.in-questionnaire .editorial-portraits { visibility: visible; }
+#questionnaire-dialog {
+  width: calc(100% - 28px);
+  max-width: 390px;
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  padding: 0;
+  border: 1px solid #eadfd8;
+  border-radius: 25px;
+  overflow: hidden;
+  background: var(--surface);
+}
+#questionnaire-dialog::backdrop {
+  background: #35272870;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+#questionnaire-dialog .quiz-shell {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 30px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  width: 100%;
+}
+#questionnaire-dialog .quiz-header { padding: 17px 23px 7px; }

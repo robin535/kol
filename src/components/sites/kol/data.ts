@@ -10,11 +10,12 @@ export const BRAND = {
     "kol — explore fictional adult profiles, save your favorites, and invite friends to unlock community chat.",
 } as const;
 
-export type Lang = "zh" | "en" | "hi";
+export type Lang = "zh" | "en" | "hi" | "es";
 export const LANGS: { code: Lang; label: string }[] = [
   { code: "zh", label: "简体中文" },
   { code: "en", label: "English" },
   { code: "hi", label: "हिन्दी" },
+  { code: "es", label: "Español" },
 ];
 
 export type Gender = "man" | "woman";
@@ -172,6 +173,7 @@ export const QUIZ_COPY: Record<Lang, QuizCopy> = {
   zh: QUIZ_SOURCE.zh,
   en: QUIZ_SOURCE.en,
   hi: QUIZ_SOURCE.en,
+  es: QUIZ_SOURCE.en,
 };
 
 /** Language lookup with Hindi falling back to English copy. */
@@ -179,6 +181,7 @@ export const QUIZ_BY_LANG: Record<Lang, QuizCopy> = {
   zh: QUIZ_COPY.zh,
   en: QUIZ_COPY.en,
   hi: QUIZ_COPY.en,
+  es: QUIZ_COPY.en,
 };
 
 /* ---------- Profile data ---------- */
@@ -222,7 +225,7 @@ export function normalizeProfiles(raw: Profile[]): Profile[] {
   }));
 }
 
-export function pickText<T extends { zh?: string; en?: string; hi?: string }>(
+export function pickText<T extends { zh?: string; en?: string; hi?: string; es?: string }>(
   v: T | string | undefined,
   lang: Lang,
 ): string {
