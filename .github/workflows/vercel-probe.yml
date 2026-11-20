@@ -1,0 +1,21 @@
+name: Vercel Identity Probe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Who is this token
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set +e
+          echo "== /v2/user =="
+          curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $VERCEL_TOKEN" https://api.vercel.com/v2/user
+          echo "== /v2/teams =="
+          curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $VERCEL_TOKEN" https://api.vercel.com/v2/teams
+          echo "== /v9/projects/<project> =="
+          curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v9/projects/${{ secrets.VERCEL_PROJECT_ID }}"
