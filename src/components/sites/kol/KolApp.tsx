@@ -308,7 +308,7 @@ export default function KolApp({ heroes }: Props) {
           </header>
 
           <div className="app-content">
-            {tab === "discover" ? (
+            {!result ? null : tab === "discover" ? (
               <div className="discover">
                 <div className="discover-top">
                   <div className="discover-tabs">
