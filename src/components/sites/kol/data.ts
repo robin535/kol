@@ -209,7 +209,7 @@ export const QUIZ_BY_LANG: Record<Lang, QuizCopy> = {
   zh: QUIZ_COPY.zh,
   en: QUIZ_COPY.en,
   hi: QUIZ_COPY.en,
-  es: QUIZ_COPY.en,
+  es: QUIZ_ES,
 };
 
 /* ---------- Profile data ---------- */
