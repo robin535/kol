@@ -308,7 +308,17 @@ export default function KolApp({ heroes }: Props) {
           </header>
 
           <div className="app-content">
-            {!result ? null : tab === "discover" ? (
+            {!result ? (
+              <div className="welcome-stage" aria-hidden="true">
+                <span>♡</span>
+                <p>A LITTLE CHEMISTRY.</p>
+                <h2>
+                  Someone
+                  <br />
+                  your kind.
+                </h2>
+              </div>
+            ) : tab === "discover" ? (
               <div className="discover">
                 <div className="discover-top">
                   <div className="discover-tabs">
@@ -590,6 +600,7 @@ export default function KolApp({ heroes }: Props) {
           lang={lang}
           initial={result ?? undefined}
           onDismiss={() => setEditOpen(false)}
+          onLangChange={setLang}
           onComplete={(next) => {
             setEditOpen(false);
             onQuizComplete(next);

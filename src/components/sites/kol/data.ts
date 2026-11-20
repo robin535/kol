@@ -138,7 +138,7 @@ const QUIZ_SOURCE: { zh: QuizCopy; en: QuizCopy } = {
     hint: "遇见兴趣相投、聊得来的人。",
     genderMan: "我是男生",
     genderWoman: "我是女生",
-    step: (i: number) => `${i + 1} / 4`,
+    step: (i: number) => `0${i + 1} / 04`,
   },
   en: {
     titles: [
@@ -165,7 +165,7 @@ const QUIZ_SOURCE: { zh: QuizCopy; en: QuizCopy } = {
     hint: "Find someone who shares your interests.",
     genderMan: "I’m a man",
     genderWoman: "I’m a woman",
-    step: (i: number) => `${i + 1} / 4`,
+    step: (i: number) => `0${i + 1} / 04`,
   },
 };
 
@@ -194,7 +194,7 @@ const QUIZ_ES: QuizCopy = {
   hint: "Encuentra a alguien con tus mismos intereses.",
   genderMan: "Soy hombre",
   genderWoman: "Soy mujer",
-  step: (i: number) => `${i + 1} / 4`,
+  step: (i: number) => `0${i + 1} / 04`,
 };
 
 export const QUIZ_COPY: Record<Lang, QuizCopy> = {

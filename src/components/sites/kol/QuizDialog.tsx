@@ -2,20 +2,27 @@
 
 import { useEffect, useRef } from "react";
 import Quiz, { type QuizResult } from "./Quiz";
-import type { Lang } from "./data";
+import { LANGS, type Lang } from "./data";
 
 type Props = {
   lang: Lang;
   initial?: Partial<QuizResult>;
   onComplete: (result: QuizResult) => void;
   onDismiss: () => void;
+  onLangChange?: (lang: Lang) => void;
 };
 
 /**
  * The source site opens its questionnaire in a native <dialog> (modal),
  * floating over the editorial landing page instead of replacing it inline.
  */
-export default function QuizDialog({ lang, initial, onComplete, onDismiss }: Props) {
+export default function QuizDialog({
+  lang,
+  initial,
+  onComplete,
+  onDismiss,
+  onLangChange,
+}: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -40,6 +47,20 @@ export default function QuizDialog({ lang, initial, onComplete, onDismiss }: Pro
           <span className="wordmark">
             kol<span>♡</span>
           </span>
+          <div className="quiz-tools">
+            <select
+              id="quiz-language"
+              aria-label="Language"
+              value={lang}
+              onChange={(event) => onLangChange?.(event.target.value as Lang)}
+            >
+              {LANGS.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </header>
         <Quiz
           lang={lang}

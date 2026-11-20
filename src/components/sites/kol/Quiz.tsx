@@ -7,7 +7,6 @@ import {
   IDEAL_CHOICES,
   IDEAL_TRAITS,
   QUIZ_BY_LANG,
-  TRAIT_LABEL,
   type Gender,
   type HobbyId,
   type Lang,
@@ -44,6 +43,10 @@ const ILLUSTRATION: Record<string, string> = {
   active: "muscular",
 };
 
+/**
+ * Source `questionnaire()` markup: one section per step, every choice commits on a
+ * single tap (source `chooseAnswer()` advances the step without a Continue button).
+ */
 export default function Quiz({ lang, onComplete, initial }: Props) {
   const copy = QUIZ_BY_LANG[lang];
   const [step, setStep] = useState(0);
@@ -84,17 +87,11 @@ export default function Quiz({ lang, onComplete, initial }: Props) {
   }
 
   return (
-    <div className="quiz-shell">
-      {step > 0 && (
-        <button className="back-text" onClick={back}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M19 12H5m6-6-6 6 6 6" />
-          </svg>
-          {copy.back}
-        </button>
-      )}
-
-      <div className="question-progress" aria-hidden="true">
+    <section
+      className="single-question quick-question full-questionnaire"
+      data-question-step={step}
+    >
+      <div className="question-progress" aria-label={copy.step(step)}>
         <div className="bars">
           {Array.from({ length: TOTAL }, (_, i) => (
             <i key={i} className={i <= step ? "active" : ""} />
@@ -103,32 +100,43 @@ export default function Quiz({ lang, onComplete, initial }: Props) {
         <span>{copy.step(step)}</span>
       </div>
 
-      <h2 className="question-title">{copy.titles[step]}</h2>
+      {step > 0 && (
+        <button type="button" className="back-text" onClick={back}>
+          ← {copy.back}
+        </button>
+      )}
+
+      <h1 className="question-title" tabIndex={-1}>
+        {copy.titles[step]}
+      </h1>
       <p className="question-subtitle">{copy.subtitles[step]}</p>
 
       {step === 0 && (
-        <div className="quiz-genders">
-          <button
-            type="button"
-            className={`quiz-gender-card ${gender === "woman" ? "selected" : ""}`}
-            onClick={() => pickGender("woman")}
-          >
-            <span className="gender-symbol woman">♀</span>
-            <strong>{copy.genderWoman}</strong>
-          </button>
-          <button
-            type="button"
-            className={`quiz-gender-card ${gender === "man" ? "selected" : ""}`}
-            onClick={() => pickGender("man")}
-          >
-            <span className="gender-symbol">♂</span>
-            <strong>{copy.genderMan}</strong>
-          </button>
+        <div className="quiz-options quiz-genders">
+          {(
+            [
+              ["woman", "♀", copy.genderWoman, copy.men],
+              ["man", "♂", copy.genderMan, copy.women],
+            ] as const
+          ).map(([value, symbol, label, hint]) => (
+            <button
+              key={value}
+              type="button"
+              className={`quiz-answer gender-choice ${value} ${gender === value ? "selected" : ""}`}
+              onClick={() => pickGender(value)}
+            >
+              <span className={`gender-symbol ${value}`} aria-hidden="true">
+                {symbol}
+              </span>
+              <strong>{label}</strong>
+              <small>{hint}</small>
+            </button>
+          ))}
         </div>
       )}
 
       {step === 1 && (
-        <div className="quiz-grid age-options">
+        <div className="quiz-options age-options">
           {AGE_BANDS.map((b) => (
             <button
               key={b.min}
@@ -143,12 +151,14 @@ export default function Quiz({ lang, onComplete, initial }: Props) {
       )}
 
       {step === 2 && (
-        <div className="quiz-grid hobby-options">
+        <div className="quiz-options hobby-options" role="radiogroup" aria-label={copy.titles[2]}>
           {HOBBY_OPTIONS.map((h) => (
             <button
               key={h.id}
               type="button"
               className={`quiz-answer hobby-choice ${hobby === h.id ? "selected" : ""}`}
+              role="radio"
+              aria-checked={hobby === h.id}
               onClick={() => pickHobby(h.id)}
             >
               <span aria-hidden="true">{h.symbol}</span>
@@ -159,12 +169,13 @@ export default function Quiz({ lang, onComplete, initial }: Props) {
       )}
 
       {step === 3 && (
-        <div className="quiz-grid ideal-options">
+        <div className="quiz-options ideal-options">
           {ideals.map((o) => (
             <button
               key={o.id}
               type="button"
               className={`quiz-answer ideal-choice ${ideal === o.id ? "selected" : ""}`}
+              aria-pressed={ideal === o.id}
               onClick={() => pickIdeal(o.id)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -180,32 +191,8 @@ export default function Quiz({ lang, onComplete, initial }: Props) {
         </div>
       )}
 
-      <p className="quiz-adult">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="5" y="10" width="14" height="11" rx="2" />
-          <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-        </svg>
-        {copy.adult}
-      </p>
-      <p className="quiz-hint">
-        {gender === "man"
-          ? copy.women
-          : gender === "woman"
-            ? copy.men
-            : copy.hint}
-      </p>
-      {traitsPreview(ideal) && (
-        <p className="quiz-selected">
-          <span aria-hidden="true">♡</span>
-          {TRAIT_LABEL[traitsPreview(ideal)!]?.[lang === "zh" ? "zh" : "en"]}
-        </p>
-      )}
-    </div>
+      <p className="question-hint">{step === 2 ? copy.hint : copy.adult}</p>
+      <p className="question-status" role="status" />
+    </section>
   );
-}
-
-function traitsPreview(id: string | null) {
-  if (!id) return null;
-  const t = IDEAL_TRAITS[id];
-  return t ? (t as keyof typeof TRAIT_LABEL) : null;
 }
