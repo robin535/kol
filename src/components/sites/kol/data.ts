@@ -169,11 +169,39 @@ const QUIZ_SOURCE: { zh: QuizCopy; en: QuizCopy } = {
   },
 };
 
+const QUIZ_ES: QuizCopy = {
+  titles: [
+    "Empecemos por ti.",
+    "¿Cuál es tu rango de edad?",
+    "¿Qué te gusta hacer?",
+    "¿A quién te gustaría conocer?",
+  ],
+  subtitles: [
+    "Elige tu género para empezar.",
+    "Solo para mayores de 18 años",
+    "Elige una de tus aficiones favoritas.",
+    "Elige lo que más te atrae",
+  ],
+  back: "Volver",
+  next: "Continuar",
+  adult: "Solo para mayores de 18 años",
+  agePlus: "50 años o más",
+  working: "Preparando tus perfiles…",
+  error: "No se pudo guardar. Elige tu tipo otra vez para reintentar.",
+  women: "Descubre mujeres adultas ficticias",
+  men: "Descubre hombres adultos ficticios",
+  selected: (n: number) => `${n} seleccionados`,
+  hint: "Encuentra a alguien con tus mismos intereses.",
+  genderMan: "Soy hombre",
+  genderWoman: "Soy mujer",
+  step: (i: number) => `${i + 1} / 4`,
+};
+
 export const QUIZ_COPY: Record<Lang, QuizCopy> = {
   zh: QUIZ_SOURCE.zh,
   en: QUIZ_SOURCE.en,
   hi: QUIZ_SOURCE.en,
-  es: QUIZ_SOURCE.en,
+  es: QUIZ_ES,
 };
 
 /** Language lookup with Hindi falling back to English copy. */
