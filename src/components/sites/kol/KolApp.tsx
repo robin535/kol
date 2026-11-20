@@ -311,6 +311,11 @@ export default function KolApp({ heroes }: Props) {
             </div>
           </header>
 
+          {/* Source keeps the music credit pinned at the foot of the phone frame. */}
+          <span className="music-credit" aria-hidden="true">
+            音乐署名
+          </span>
+
           <div className="app-content">
             {!result ? (
               <div className="welcome-stage" aria-hidden="true">
