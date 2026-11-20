@@ -21,6 +21,15 @@ export default function Welcome({ lang, mode, country, onStart, onMatched }: Pro
       : { intro: WELCOME_MX, memory: WELCOME_BR, matching: WELCOME_BR };
 
   const [progress, setProgress] = useState(0);
+  const [opening, setOpening] = useState(false);
+
+  /* Source `bind()`: the start button reports `opening` for ~650 ms while the
+     entry challenge is issued, then the matching panel takes over. */
+  useEffect(() => {
+    if (!opening) return;
+    const timer = window.setTimeout(onStart, 650);
+    return () => window.clearTimeout(timer);
+  }, [opening, onStart]);
 
   useEffect(() => {
     if (mode !== "matching") return;
@@ -84,9 +93,16 @@ export default function Welcome({ lang, mode, country, onStart, onMatched }: Pro
             <p>{m.welcomeIntro}</p>
             <p>{m.welcomeDetail}</p>
           </div>
-          <button id="guest-start" type="button" className="welcome-start" onClick={onStart}>
-            {m.welcomeStart}
-            <span aria-hidden="true">↗</span>
+          <button
+            id="guest-start"
+            type="button"
+            className="welcome-start"
+            disabled={opening}
+            aria-busy={opening}
+            onClick={() => setOpening(true)}
+          >
+            {opening ? m.opening : m.welcomeStart}
+            {!opening && <span aria-hidden="true">↗</span>}
           </button>
           <p id="guest-adult" className="welcome-adult">{m.welcomeAdult}</p>
           <p id="journey-error" className="form-error" role="alert" />

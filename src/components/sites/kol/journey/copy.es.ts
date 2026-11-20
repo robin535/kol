@@ -187,4 +187,5 @@ export const es: Partial<JourneyCopy> = {
   welcomeDetail: "Conecta con personas que buscan compañía sincera y valores compartidos.",
   welcomeStart: "Empieza tu camino de conexión",
   welcomeAdult: "Al continuar, confirmas que tienes 18+",
+  opening: "Preparando tu experiencia…",
 };

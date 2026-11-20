@@ -16,6 +16,7 @@ import {
 } from "./store";
 import { savePersonalProfile, shareReminderDismissed, type RewardRecord } from "./storage";
 import { copyText, inviteURL, ROMANTIC_PHOTO, sleep } from "./util";
+import { MusicToggle } from "./MusicToggle";
 import Poster from "./Poster";
 import BrowserGuide from "./stages/BrowserGuide";
 import ChatRoom, { type ChatMessage } from "./stages/ChatRoom";
@@ -46,6 +47,8 @@ type Props = {
   onClose: (() => void) | null;
   /** Full-page variant used by /join instead of the dialog overlay. */
   page?: boolean;
+  /** Called once the guest entry has finished; opens the questionnaire. */
+  onEntryComplete?: (() => void) | null;
 };
 
 function messageId(): string {
@@ -63,7 +66,15 @@ const LOCKED_STAGES: JourneyStage[] = [
   "register",
 ];
 
-export default function Journey({ lang, profile, stage, onStage, onClose, page = false }: Props) {
+export default function Journey({
+  lang,
+  profile,
+  stage,
+  onStage,
+  onClose,
+  page = false,
+  onEntryComplete = null,
+}: Props) {
   const router = useRouter();
   const session = useSession();
   const account = session.account;
@@ -129,15 +140,20 @@ export default function Journey({ lang, profile, stage, onStage, onClose, page =
     else router.push("/");
   }, [onClose, router]);
 
-  /* Once the guest entry has verified, go straight into account creation so
-     the rest of the journey (phone, profile, rewards, chat) is reachable. */
+  /* Source `enterGuestFlow()`: after verify the entry waits 10 s, then hands
+     over to the questionnaire. Once an account exists the visit opens the
+     normal discovery page instead. */
   const finishMatch = useCallback(() => {
     if (account) {
       finishEntry();
       return;
     }
+    if (onEntryComplete) {
+      onEntryComplete();
+      return;
+    }
     go("register");
-  }, [account, finishEntry, go]);
+  }, [account, finishEntry, go, onEntryComplete]);
 
   const register = useCallback(
     (values: { username: string; password: string }) => {
@@ -280,11 +296,14 @@ export default function Journey({ lang, profile, stage, onStage, onClose, page =
     stage === "phone" ||
     stage === "personal-profile";
 
+  /* Source `#journey-dialog .journey-header` carries the sound control on the
+     entry steps; the light steps swap it for the close button. */
   const header = (
     <header className="journey-header">
       <span className="wordmark">
         kol<span>♡</span>
       </span>
+      {dark && <MusicToggle lang={lang} />}
       {onClose && !LOCKED_STAGES.includes(stage) && (
         <button className="journey-close" data-journey="close" aria-label={m.close} onClick={onClose}>
           ×
@@ -442,7 +461,7 @@ export default function Journey({ lang, profile, stage, onStage, onClose, page =
 
   const stageClass = page
     ? `journey-page ${dark ? "journey-dark" : ""}`
-    : `kj-dialog ${stage === "verify" || stage === "matching" ? "kj-full" : ""}`;
+    : "kj-dialog";
 
   /* The source paints one shared romantic photograph behind the invitation
      and reward steps. */

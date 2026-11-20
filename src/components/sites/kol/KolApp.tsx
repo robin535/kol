@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { QuizResult } from "./Quiz";
 import QuizDialog from "./QuizDialog";
 import {
@@ -57,10 +57,21 @@ export default function KolApp({ heroes }: Props) {
   const [info, setInfo] = useState<Profile | null>(null);
 
   /* Journey overlay opened from the profile card or the campaign banner. */
+  /* The source lands on the guest entry (welcome → 10 s matching) and only then
+     opens the questionnaire, so the journey starts in entry mode. */
   const [journey, setJourney] = useState<{
     stage: JourneyStage;
     profile: Profile | null;
-  } | null>(null);
+    /** The guest entry hands over to the questionnaire once it finishes. */
+    entryFlow?: boolean;
+  } | null>(() => ({ stage: "verify", profile: null, entryFlow: true }));
+
+  const [entryDone, setEntryDone] = useState(false);
+  const entryComplete = useCallback(() => {
+    setEntryDone(true);
+    setJourney(null);
+    setEditOpen(true);
+  }, []);
 
   const session = useSession();
   const account = session.account;
@@ -214,6 +225,13 @@ export default function KolApp({ heroes }: Props) {
     document.body.classList.add("in-discovery");
     return () => document.body.classList.remove("in-discovery");
   }, [result]);
+
+  // The guest entry paints the source `registration-entry` backdrop behind it.
+  useEffect(() => {
+    if (!journey?.entryFlow) return;
+    document.body.classList.add("registration-entry");
+    return () => document.body.classList.remove("registration-entry");
+  }, [journey?.entryFlow]);
 
   return (
     <div className="kol-root">
@@ -604,7 +622,7 @@ export default function KolApp({ heroes }: Props) {
         </section>
       </main>
 
-      {(editOpen || !result) && (
+      {(editOpen || (entryDone && !result)) && (
         <QuizDialog
           lang={lang}
           initial={result ?? undefined}
@@ -703,8 +721,9 @@ export default function KolApp({ heroes }: Props) {
           lang={lang}
           profile={journey.profile}
           stage={journey.stage}
-          onStage={(stage) => setJourney({ stage, profile: journey.profile })}
-          onClose={() => setJourney(null)}
+          onStage={(stage) => setJourney({ ...journey, stage })}
+          onClose={journey.entryFlow ? null : () => setJourney(null)}
+          onEntryComplete={journey.entryFlow ? entryComplete : null}
         />
       )}
     </div>
