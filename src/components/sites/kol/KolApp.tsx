@@ -203,6 +203,12 @@ export default function KolApp({ heroes }: Props) {
     [lang],
   );
 
+  // Source page runs the discovery layout while the deck screen is active.
+  useEffect(() => {
+    document.body.classList.add("in-discovery");
+    return () => document.body.classList.remove("in-discovery");
+  }, []);
+
   return (
     <div className="kol-root">
       <div className="desktop-wordmark" aria-hidden="true">

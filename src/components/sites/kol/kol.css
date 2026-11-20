@@ -12,8 +12,7 @@
   --line: #e9e1da;
   --green: #3c6658;
   --shadow: 0 18px 70px #4c282c12;
-  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Noto Sans Devanagari", sans-serif;
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Devanagari", sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;
@@ -801,3 +800,45 @@
   .quiz-shell { padding: 10px 22px 14px; }
   .kol-modal { padding: 10px; }
 }
+
+/* ---- Source landing theme (koi style.css "Warm evening editorial backdrop") ---- */
+:root {
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Devanagari", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+}
+body {
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Devanagari", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 16% 34%, #71303d 0, transparent 50%),
+    radial-gradient(ellipse at 83% 88%, #512638 0, transparent 45%),
+    #1f1720;
+}
+.desktop-wordmark { color: #ff99a6; z-index: 1; }
+.editorial-kicker { color: #e6a0aa; letter-spacing: 3.6px; }
+.editorial h1 { color: #fff2ec; font-size: clamp(56px, 6.5vw, 86px); letter-spacing: -4px; }
+.editorial h1 em { color: #ff8e9c; }
+.editorial-sub { color: #d0aeb0; font-size: 17px; }
+.editorial-note { color: #be909d; font-size: 11px; letter-spacing: 1.2px; }
+.editorial-portraits { height: 305px; max-width: 380px; margin-top: 34px; }
+.editorial-portraits img {
+  width: 185px;
+  height: 279px;
+  border: 3px solid #efd5d340;
+  border-radius: 19px;
+  box-shadow: 0 25px 50px #09030955;
+  object-position: 50% 27%;
+}
+.portrait-one { left: 0; top: 0; transform: rotate(-8deg); }
+.portrait-two { right: 0; top: 16px; transform: rotate(8deg); }
+.portrait-heart {
+  background: #f17387;
+  top: 43%;
+  width: 52px;
+  height: 52px;
+  color: #fff3ee;
+  box-shadow: 0 0 35px #fb91a665;
+}
+.phone-app { border-color: #efcecd40; box-shadow: 0 30px 100px #09020970; }
