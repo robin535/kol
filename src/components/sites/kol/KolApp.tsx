@@ -215,13 +215,27 @@ export default function KolApp({ heroes }: Props) {
 
       <main className="workspace">
         <aside className="editorial" aria-label={BRAND.title}>
-          <div className="editorial-kicker">A LITTLE CHEMISTRY.</div>
-          <h1>
-            Someone
-            <br />
-            your <em>kind.</em>
-          </h1>
-          <p className="editorial-sub">A glance. A spark. A new beginning.</p>
+          <div className="editorial-kicker">
+            {lang === "es" ? "UN POCO DE QUÍMICA." : "A LITTLE CHEMISTRY."}
+          </div>
+          {lang === "es" ? (
+            <h1>
+              Alguien
+              <br />
+              de tu <em>tipo.</em>
+            </h1>
+          ) : (
+            <h1>
+              Someone
+              <br />
+              your <em>kind.</em>
+            </h1>
+          )}
+          <p className="editorial-sub">
+            {lang === "es"
+              ? "Una mirada. Una chispa. Un nuevo comienzo."
+              : "A glance. A spark. A new beginning."}
+          </p>
           <div className="editorial-portraits" aria-hidden="true">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="portrait-one" src={heroSrc} alt="" width={1024} height={1536} />
