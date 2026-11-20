@@ -50,7 +50,6 @@ export default function KolApp({ heroes }: Props) {
   const [result, setResult] = useState<QuizResult | null>(null);
 
   const [tab, setTab] = useState<"discover" | "likes">("discover");
-  const [deck, setDeck] = useState<Profile[]>([]);
   const [index, setIndex] = useState(0);
   const [history, setHistory] = useState<
     { profile: Profile; action: "like" | "pass" }[]
@@ -88,6 +87,22 @@ export default function KolApp({ heroes }: Props) {
     return () => window.clearTimeout(t);
   }, [toast]);
 
+  /* Deck is derived: rebuilt whenever the answer or the loaded profiles change. */
+  const deck = useMemo<Profile[]>(() => {
+    if (!result || !profiles.length) return [];
+    const wanted: Gender = result.gender === "man" ? "woman" : "man";
+    const ideal = IDEAL_CHOICES[wanted].find((o) => o.id === result.idealType);
+    return profiles
+      .filter((p) => p.gender === wanted)
+      .slice()
+      .sort((a, b) => {
+        const score = (p: Profile) =>
+          (p.traits?.includes(result.traits[0]) ? 2 : 0) +
+          (ideal && p.ideal === ideal.id ? 1 : 0);
+        return score(b) - score(a);
+      });
+  }, [result, profiles]);
+
   const top = deck[index];
   const under = deck[index + 1];
   const discoverActive = tab === "discover";
@@ -98,28 +113,17 @@ export default function KolApp({ heroes }: Props) {
     setToast({ msg, key: toastSeq.current });
   }
 
-  function buildDeck(r: QuizResult) {
-    const wanted: Gender = r.gender === "man" ? "woman" : "man";
-    const ideal = IDEAL_CHOICES[wanted].find((o) => o.id === r.idealType);
-    const list = profiles
-      .filter((p) => p.gender === wanted)
-      .slice()
-      .sort((a, b) => {
-        const score = (p: Profile) =>
-          (p.traits?.includes(r.traits[0]) ? 2 : 0) +
-          (ideal && p.ideal === ideal.id ? 1 : 0);
-        return score(b) - score(a);
-      });
-    return list.length ? list : profiles;
-  }
 
+
+
+  /* Source flow: answering the dialog closes it, then the dialog reopens over the
+     editorial landing (welcome-stage) while profiles are prepared. */
   function onQuizComplete(r: QuizResult) {
     setResult(r);
-    setDeck(buildDeck(r));
     setIndex(0);
     setHistory([]);
     setTab("discover");
-    setScreen("discover");
+    setScreen("about");
     setEditOpen(false);
   }
 
@@ -147,7 +151,6 @@ export default function KolApp({ heroes }: Props) {
   }
   function restart() {
     if (!result) return;
-    setDeck(buildDeck(result));
     setIndex(0);
     setHistory([]);
     setScreen("discover");
