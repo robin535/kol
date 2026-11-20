@@ -205,11 +205,15 @@ export default function KolApp({ heroes }: Props) {
     [lang],
   );
 
-  // Source page runs the discovery layout while the deck screen is active.
+  // Source page runs the discovery layout only while the deck screen is active.
   useEffect(() => {
+    if (!result) {
+      document.body.classList.remove("in-discovery");
+      return;
+    }
     document.body.classList.add("in-discovery");
     return () => document.body.classList.remove("in-discovery");
-  }, []);
+  }, [result]);
 
   return (
     <div className="kol-root">
