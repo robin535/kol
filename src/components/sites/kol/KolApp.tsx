@@ -191,7 +191,8 @@ export default function KolApp({ heroes }: Props) {
   const passStamp = dragging ? Math.min(Math.max(-drag.x, 0) / 120, 1) : 0;
   const rotate = dragging ? drag.x / 18 : 0;
 
-  const heroSrc = result?.gender === "man" ? heroes.man : heroes.woman;
+  /* Source landing artwork before any answer: man on the left, woman on the right. */
+  const heroSrc = !result || result.gender === "man" ? heroes.man : heroes.woman;
   const amount = marketAmount(country);
 
   const openJourney = (stage: JourneyStage, profile: Profile | null = info) => {
@@ -252,7 +253,6 @@ export default function KolApp({ heroes }: Props) {
             />
             <span className="portrait-heart">♡</span>
           </div>
-          <p className="editorial-note">{heroNote.toUpperCase()}</p>
         </aside>
 
         <section className="phone-app" aria-label={`${BRAND.name} mobile preview`}>

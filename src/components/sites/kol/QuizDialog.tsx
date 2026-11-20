@@ -28,8 +28,9 @@ export default function QuizDialog({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (dialog && !dialog.open) dialog.showModal();
-    document.body.classList.add("in-questionnaire");
-    return () => document.body.classList.remove("in-questionnaire");
+    document.body.classList.add("in-questionnaire", "registration-entry");
+    return () =>
+      document.body.classList.remove("in-questionnaire", "registration-entry");
   }, []);
 
   return (

@@ -819,6 +819,24 @@ body {
 }
 .phone-app { border-color: #efcecd40; box-shadow: 0 30px 100px #09020970; }
 
+/* ---- Source landing frame while the questionnaire is open (live registration.css) ---- */
+body.registration-entry {
+  background: radial-gradient(ellipse at 20% 15%, #58263e, transparent 65%), #140d19;
+  align-items: center;
+  padding: 24px;
+  color: #fff2f6;
+}
+body.registration-entry .workspace { max-width: 1200px; min-height: 100svh; margin: auto; padding: 42px 64px; display: grid; grid-template-columns: 1fr 418px; gap: 88px; align-items: center; }
+body.registration-entry .editorial { padding: 44px 0 16px; align-self: center; }
+body.registration-entry .editorial h1 { font-family: Georgia, serif; font-weight: 400; font-size: clamp(56px, 6.5vw, 86px); letter-spacing: -4px; line-height: 1.02; margin: 20px 0; }
+body.registration-entry .editorial-note { display: none; }
+@media (max-width: 650px) {
+  body.registration-entry { padding: 0; align-items: flex-start; }
+  body.registration-entry .editorial { display: none; }
+  body.registration-entry .workspace { display: block; padding: 0; min-height: 100svh; max-width: 440px; }
+}
+
+
 /* ---- Source questionnaire modal (native <dialog> over the editorial page) ---- */
 .in-questionnaire .editorial-portraits { visibility: visible; }
 .in-questionnaire .app-header { background: #331c29; color: #fce9e6; }
