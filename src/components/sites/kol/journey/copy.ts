@@ -1,4 +1,5 @@
 import type { Lang } from "../data";
+import { es } from "./copy.es";
 
 /* All user-facing copy for the journey, reward, registration and profile steps.
    English is the complete base; Chinese and Hindi override the strings they
@@ -781,7 +782,7 @@ const hi: Partial<JourneyCopy> = {
   shareEnded: "रिमाइंडर समाप्त हो गया। आप अब भी दोस्त को बुलाकर इनाम पा सकते हैं।",
 };
 
-const SOURCE: Record<Lang, Partial<JourneyCopy>> = { zh, en, hi, es: {} };
+const SOURCE: Record<Lang, Partial<JourneyCopy>> = { zh, en, hi, es };
 
 export function copyFor(lang: Lang): JourneyCopy {
   return { ...en, ...SOURCE[lang] };
